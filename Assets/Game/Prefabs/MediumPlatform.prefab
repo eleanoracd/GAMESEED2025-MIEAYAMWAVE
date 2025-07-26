@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumPlatform
       objectReference: {fileID: 0}
+    - target: {fileID: 1666995730504085963, guid: b22cd85bd2e2242468f75448407e922e, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
