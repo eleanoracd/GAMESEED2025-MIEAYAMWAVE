@@ -11,6 +11,7 @@ public class PlatformManager : MonoBehaviour
     [SerializeField] private float gapVariation = 0.5f;
     [SerializeField] private float minYOffset = -7f;
     [SerializeField] private float maxYOffset = -4f;
+    [SerializeField] private float offscreenBufferTime = 1f;
 
     [Header("Tiles Spawn Position")]
     [SerializeField] private float initialSpawnX = -10f;
@@ -35,6 +36,7 @@ public class PlatformManager : MonoBehaviour
 
     private List<PlatformTile> platformTiles = new List<PlatformTile>();
     private Dictionary<GameObject, Queue<GameObject>> platformPools = new Dictionary<GameObject, Queue<GameObject>>();
+    private Dictionary<GameObject, float> platformOffscreenTimes = new Dictionary<GameObject, float>();
 
     private class PlatformTile
     {
@@ -92,13 +94,35 @@ public class PlatformManager : MonoBehaviour
             tile.tileObject.transform.Translate(Vector2.left * currentScrollSpeed * Time.deltaTime);
         }
 
-        PlatformTile firstTile = platformTiles[0];
         float cameraLeftEdge = Camera.main.ViewportToWorldPoint(Vector3.zero).x;
-        float rightEdgeOfFirstTile = firstTile.tileObject.transform.position.x + firstTile.width / 2f;
-
-        if (rightEdgeOfFirstTile < cameraLeftEdge)
+        foreach (var tile in platformTiles)
         {
-            ReplaceOffscreenTile();
+            float rightEdge = tile.tileObject.transform.position.x + tile.width / 2f;
+            
+            if (rightEdge < cameraLeftEdge)
+            {
+                if (!platformOffscreenTimes.ContainsKey(tile.tileObject))
+                {
+                    platformOffscreenTimes[tile.tileObject] = Time.time;
+                }
+            }
+            else
+            {
+                if (platformOffscreenTimes.ContainsKey(tile.tileObject))
+                {
+                    platformOffscreenTimes.Remove(tile.tileObject);
+                }
+            }
+        }
+
+        PlatformTile firstTile = platformTiles[0];
+        if (platformOffscreenTimes.TryGetValue(firstTile.tileObject, out float offscreenTime))
+        {
+            if (Time.time - offscreenTime >= offscreenBufferTime)
+            {
+                ReplaceOffscreenTile();
+                platformOffscreenTimes.Remove(firstTile.tileObject);
+            }
         }
     }
 
@@ -159,13 +183,6 @@ public class PlatformManager : MonoBehaviour
         }
 
         tile.transform.position = new Vector3(currentX, yOffset, 0f);
-        // platformTiles.Add(new PlatformTile(tile, width, isSafeTile));
-
-        // if (!isSafeTile && Random.value < npcSpawnChance && npcManager != null)
-        // {
-        //     Vector3 npcPos = new Vector3(currentX, yOffset + npcYOffset, 0f);
-        //     npcManager.SpawnNPC(npcPos);
-        // }
 
         PlatformTile platformTile = new PlatformTile(tile, width, isSafeTile);
 
@@ -204,6 +221,11 @@ public class PlatformManager : MonoBehaviour
                 npcManager.ReturnToPool(npc);
             }
             firstTile.npcInstances.Clear();
+        }
+
+        if (platformOffscreenTimes.ContainsKey(firstTile.tileObject))
+        {
+            platformOffscreenTimes.Remove(firstTile.tileObject);
         }
 
         GameObject prefab = FindPrefabByInstance(firstTile.tileObject);

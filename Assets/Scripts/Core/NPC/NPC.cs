@@ -5,34 +5,47 @@ public class NPC : MonoBehaviour
 {
     private bool isConverted = false;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (isConverted) return;
 
-        if (other.CompareTag("Zombie"))
+        Cultist cultist = collision.gameObject.GetComponent<Cultist>();
+        if (cultist != null)
         {
-            // ConvertToZombie();
+            ConvertToCultist();
         }
     }
 
-    // public void ConvertToZombie()
-    // {
-    //     isConverted = true;
+    public void ConvertToCultist()
+    {
+        isConverted = true;
 
-    //     // Option A: Disable NPC and spawn a Zombie
-    //     gameObject.SetActive(false);
-    //     ZombieManager.Instance.SpawnZombie(transform.position); // You’ll make this in step 4
+        NPCManager npcManager = FindObjectOfType<NPCManager>();
+        if (npcManager != null)
+        {
+            npcManager.ReturnToPoolDelayed(this.gameObject, .1f);
+        }
 
-    //     // Optionally: return to NPC pool after a short delay
-    //     StartCoroutine(ReturnToPoolDelayed(1f));
-    // }
+        gameObject.SetActive(false);
 
-    // private IEnumerator ReturnToPoolDelayed(float delay)
-    // {
-    //     yield return new WaitForSeconds(delay);
-    //     isConverted = false;
-    //     NPCManager npcManager = FindObjectOfType<NPCManager>();
-    //     npcManager.ReturnToPool(this.gameObject);
-    // }
+
+        CultistManager cultistManager = FindObjectOfType<CultistManager>();
+        if (cultistManager != null)
+        {
+            GameObject newCultist = cultistManager.SpawnCultistBehindLast();
+            if (newCultist != null)
+            {
+                Cultist cultistComponent = newCultist.GetComponent<Cultist>();
+                if (cultistComponent != null && !cultistComponent.IsLeader())
+                {
+                }
+            }
+        }
+    }
+
+    public void ResetConversion()
+    {
+        isConverted = false;
+    }
 }
 
