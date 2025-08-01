@@ -34,6 +34,12 @@ public class CultistManager : MonoBehaviour
             leader.transform.position = leaderSpawnPosition;
             leader.SetActive(true);
             activeCultists.Add(leader);
+
+            PlatformManager platformManager = FindObjectOfType<PlatformManager>();
+            if (platformManager != null)
+            {
+                platformManager.SetPlayer(leader);
+            }
         }
     }
 
@@ -131,7 +137,8 @@ public class CultistManager : MonoBehaviour
 
         cultist.SetActive(false);
         cultistComponent.SetAsFollower();
-        }
+        GameManager.Instance?.CheckGameOver();
+    }
 
     public void HandleLeaderDespawned()
     {
@@ -148,10 +155,7 @@ public class CultistManager : MonoBehaviour
                 leader = newLeader;
             }
         }
-        else
-        {
-            //game over
-        }
+        GameManager.Instance?.CheckGameOver();
     }
 
     public List<GameObject> GetActiveCultists()

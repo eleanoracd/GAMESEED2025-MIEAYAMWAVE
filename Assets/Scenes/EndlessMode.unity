@@ -350,6 +350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1035376284}
+  - component: {fileID: 1035376285}
   m_Layer: 0
   m_Name: GameManagers
   m_TagString: Untagged
@@ -375,6 +376,19 @@ Transform:
   - {fileID: 1397954856}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1035376285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035376283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc77a578a13a3174692b3ad3d738fdb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentGameMode: 0
 --- !u!1 &1053376350
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +437,7 @@ MonoBehaviour:
   - {fileID: 1666995730504085963, guid: b22cd85bd2e2242468f75448407e922e, type: 3}
   - {fileID: 2146858151860040696, guid: d558fda3a1b0b00458bbdb802ad963b0, type: 3}
   - {fileID: 6870932487653029362, guid: 51d103acef933c344995f1d86d0bf200, type: 3}
-  numberOfTiles: 5
+  numberOfTiles: 6
   initialScrollSpeed: 6
   tilesGap: 4
   gapVariation: 1
@@ -454,7 +468,7 @@ GameObject:
   - component: {fileID: 1095509017}
   - component: {fileID: 1095509018}
   m_Layer: 0
-  m_Name: CultistDespanwer
+  m_Name: Despanwer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -518,7 +532,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 50, y: 2}
+  m_Size: {x: 1200, y: 2}
   m_EdgeRadius: 0
 --- !u!114 &1095509018
 MonoBehaviour:
@@ -609,9 +623,9 @@ Transform:
   m_Children:
   - {fileID: 1053376351}
   - {fileID: 1098232681}
+  - {fileID: 1180789416}
   - {fileID: 1744217825}
   - {fileID: 1663067816}
-  - {fileID: 1180789416}
   m_Father: {fileID: 1035376284}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1180789415
@@ -630,7 +644,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1180789416
 Transform:
   m_ObjectHideFlags: 0
@@ -658,8 +672,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7633187ca3def2147aab105ccbe29692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstaclePrefab: {fileID: 0}
+  obstaclePrefab: {fileID: 6522993460319512640, guid: bcef97ec68b4508478088f82f0a91523, type: 3}
   poolSize: 10
+  spawnChance: 0.6
+  minDistanceBetweenObstacles: 2.5
+  obstacleHorizontalPadding: 0.5
+  maxObstaclesPerPlatform: 3
 --- !u!1 &1397954855
 GameObject:
   m_ObjectHideFlags: 0

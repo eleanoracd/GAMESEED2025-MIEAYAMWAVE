@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3243284128395134060}
+  - component: {fileID: 2535466870140223616}
   m_Layer: 3
-  m_Name: PlatformTop
+  m_Name: TopReference
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,6 +32,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 430633353734871157}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2535466870140223616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3063160241240237292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082f6e4f29f45834babd00755c7c6d47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &786291369651798579
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41,7 +54,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1085540225322605126, guid: b22cd85bd2e2242468f75448407e922e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 20
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1085540225322605126, guid: b22cd85bd2e2242468f75448407e922e, type: 3}
       propertyPath: m_LocalScale.y
@@ -96,7 +109,8 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3064297590254283807, guid: b22cd85bd2e2242468f75448407e922e, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1085540225322605126, guid: b22cd85bd2e2242468f75448407e922e, type: 3}
       insertIndex: -1

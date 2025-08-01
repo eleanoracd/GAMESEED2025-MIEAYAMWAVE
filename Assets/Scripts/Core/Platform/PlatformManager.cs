@@ -38,19 +38,19 @@ public class PlatformManager : MonoBehaviour
     private Dictionary<GameObject, Queue<GameObject>> platformPools = new Dictionary<GameObject, Queue<GameObject>>();
     private Dictionary<GameObject, float> platformOffscreenTimes = new Dictionary<GameObject, float>();
 
-    private class PlatformTile
+    public class PlatformTile
     {
         public GameObject tileObject;
         public float width;
         public bool isSafeStartTile;
         public List<GameObject> npcInstances = new List<GameObject>();
+        public List<GameObject> obstacleInstances = new List<GameObject>();
 
         public PlatformTile(GameObject obj, float w, bool safe = false)
         {
             tileObject = obj;
             width = w;
             isSafeStartTile = safe;
-            npcInstances = new List<GameObject>();
         }
     }
 
@@ -98,7 +98,7 @@ public class PlatformManager : MonoBehaviour
         foreach (var tile in platformTiles)
         {
             float rightEdge = tile.tileObject.transform.position.x + tile.width / 2f;
-            
+
             if (rightEdge < cameraLeftEdge)
             {
                 if (!platformOffscreenTimes.ContainsKey(tile.tileObject))
@@ -124,6 +124,8 @@ public class PlatformManager : MonoBehaviour
                 platformOffscreenTimes.Remove(firstTile.tileObject);
             }
         }
+
+        HandleObstacleRecycling();
     }
 
     private void InitializePools()
@@ -207,6 +209,12 @@ public class PlatformManager : MonoBehaviour
         }
 
         platformTiles.Add(platformTile);
+
+        ObstacleManager obstacleManager = FindObjectOfType<ObstacleManager>();
+        if (obstacleManager != null)
+        {
+            obstacleManager.TrySpawnObstacles(new Vector3(currentX, yOffset, 0f), width, platformTile);
+        }
     }
 
     private void ReplaceOffscreenTile()
@@ -267,7 +275,29 @@ public class PlatformManager : MonoBehaviour
         }
 
         platformTiles.RemoveAt(0);
-        platformTiles.Add(new PlatformTile(newTile, newWidth));
+        platformTiles.Add(newPlatformTile);
+
+        ObstacleManager obstacleManager = FindObjectOfType<ObstacleManager>();
+        if (obstacleManager != null)
+        {
+            obstacleManager.TrySpawnObstacles(new Vector3(newTileX, yOffset, 0f), newWidth, newPlatformTile);
+        }
+    }
+
+    private void HandleObstacleRecycling()
+    {
+        float cameraLeftEdge = Camera.main.ViewportToWorldPoint(Vector3.zero).x;
+        ObstacleManager obstacleManager = FindObjectOfType<ObstacleManager>();
+
+        foreach (var obstacle in FindObjectsOfType<Obstacle>())
+        {
+            Vector3 worldPos = obstacle.transform.parent != null ? obstacle.transform.parent.TransformPoint(obstacle.transform.localPosition) : obstacle.transform.position;
+
+            if (worldPos.x + 1f < cameraLeftEdge)
+            {
+                obstacleManager?.ReturnToPool(obstacle.gameObject);
+            }
+        }
     }
 
     private GameObject FindPrefabByInstance(GameObject instance)
@@ -292,4 +322,10 @@ public class PlatformManager : MonoBehaviour
     {
         return platformPrefabs[Random.Range(0, platformPrefabs.Length)];
     }
+
+    public void SetPlayer(GameObject playerObject)
+    {
+        player = playerObject;
+    }
+
 }
